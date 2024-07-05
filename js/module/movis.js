@@ -11,6 +11,7 @@ export class movis extends connect {
     movis.instance = this;
     return this;
 }
+//CONSULTA RANDOM 
 async getAllMovis(){
     let res = await this.collection.aggregate([
         {
@@ -22,4 +23,15 @@ async getAllMovis(){
     await this.conexion.close();
     return res
     }
+//PRIMERA CONSULTA
+async getAllActionMovies() {
+    let res = await this.collection.aggregate([
+      { $match: { genre: "Accion" } },  // Filtrar por género "Accion"
+      { $project: { _id: 0, name: 1, genre: 1 } }  // Proyectar solo nombre y género
+    ]).toArray();
+  
+    await this.conexion.close();
+    return res;
+  }
+
 }
