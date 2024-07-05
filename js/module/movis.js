@@ -53,7 +53,7 @@ async getMoviesWithBlurayCopies() {
   
     await this.conexion.close();
     return res;
-  }
+  };
 
 //TERCER EJERCICIO
 
@@ -114,10 +114,88 @@ async getMoviesWithActors2And3() {
     return res;
   }
 
+  //SEXTO EJERCICIO
+  async getAllActionMovies() {
+    let res = await this.collection.aggregate([
+      { $match: { genre: "Accion" } },
+      { $project: { _id: 0, name: 1, genre: 1 } }
+    ]).toArray();
+  
+    await this.conexion.close();
+    return res;
+  }
+  
+//SEPTIMO EJERCICIO
+async getSciFiMovies() {
+    let res = await this.collection.aggregate([
+      { $match: { genre: "Ciencia Ficción" } }, // Filtra por género exacto
+      { $project: { _id: 0, name: 1, genre: 1 } } // Proyecta solo nombre y género
+    ]).toArray();
+  
+    await this.conexion.close();
+    return res;
+  }
+  
 
+//OCTAVO EJERCICIO
+async getMoviesWithMainCharacterMiguel() {
+    let res = await this.collection.aggregate([
+      { $match: { "character.rol": "principal", "character.name": "Miguel" } }, // Filtra por rol y nombre
+      { $unwind: "$character" }, // Desanida el arreglo character
+      { $match: { "character.rol": "principal", "character.name": "Miguel" } }, // Filtra después de desanidar
+      { 
+        $project: { 
+          _id: 0, 
+          characterName: "$character.name",
+          rol: "$character.rol" 
+        } 
+      }
+    ]).toArray();
+  
+    await this.conexion.close();
+    return res;
+  }
+ 
+  //novena ejercicio:
+  async getMoviesWithMoreThan100Copies() {
+    let res = await this.collection.aggregate([
+      { $match: { "format.copies": { $gt: 100 } } },
+      { $unwind: "$format" }, // Desanidar el arreglo format
+      { $match: { "format.copies": { $gt: 100 } } }, // Filtrar después de desanidar
+      { 
+        $project: { 
+          _id: 0, 
+          name: 1, 
+          formatName: "$format.name", 
+          copies: "$format.copies" 
+        } 
+      }
+    ]).toArray();
+  
+    await this.conexion.close();
+    return res;
+  }
+  
 
+//decimo ejercicio
+async getMoviesWithActor1() {
+  let res = await this.collection.aggregate([
+    { $match: { "character.id_actor": 1 } },
+    { $unwind: "$character" },
+    { $match: { "character.id_actor": 1 } },
+    {
+      $project: {
+        _id: 0,
+        name: 1,
+        characterName: "$character.name",
+        actorId: "$character.id_actor",
+      },
+    },
+  ]).toArray();
 
-
+  await this.conexion.close();
+  return res;
+}
 
 
 
