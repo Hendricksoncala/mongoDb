@@ -7,4 +7,4 @@ import { movis } from './js/module/movis.js';
 // let obj2 = new connect("Carlos")
 // console.log(obj2)
 let mongo = new movis()
-console.log(await mongo.getMoviesWithActor1());
+console.log(await mongo.getMoviesWithMainCharacterMiguel());

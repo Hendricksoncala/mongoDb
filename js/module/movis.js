@@ -196,8 +196,91 @@ async getMoviesWithActor1() {
   await this.conexion.close();
   return res;
 }
+//ONCE EJERCICIO
+async getMoviesWithMainCharacterCobb() {
+  let res = await this.collection.aggregate([
+    { $match: { "character.rol": "principal", "character.apodo": "Cobb" } },
+    { $unwind: "$character" },
+    { $match: { "character.rol": "principal", "character.apodo": "Cobb" } },
+    {
+      $project: {
+        _id: 0,
+        characterName: "$character.name",
+        rol: "$character.rol",
+        apodo: "$character.apodo" // Incluimos el apodo en la proyección
+      },
+    },
+  ]).toArray();
+
+  await this.conexion.close();
+  return res;
+}
+
+//DOCE EJERCICIO
+async getMoviesWithBlurayCopies() {
+  let res = await this.collection.aggregate([
+    { $match: { "format.name": "Bluray", "format.copies": { $gt: 200 } } },
+    { $unwind: "$format" },
+    { $match: { "format.name": "Bluray" } },
+    { $project: { _id: 0, name: 1, formatName: "$format.name", copies: "$format.copies" } }
+  ]).toArray();
+
+  await this.conexion.close();
+  return res;
+}
+
+//trece ejerccio
+async getMoviesWithLowDvdValue() {
+  let res = await this.collection.aggregate([
+    { $match: { "format.name": "dvd", "format.value": { $lt: 10 } } },
+    { $unwind: "$format" },
+    { $match: { "format.name": "dvd" } },
+    { $project: { _id: 0, name: 1, formatName: "$format.name", value: "$format.value" } }
+  ]).toArray();
+
+  await this.conexion.close();
+  return res;
+}
 
 
+//catorce ejercicio
+async getMoviesWithSecondaryCharacterArthur() {
+  let res = await this.collection.aggregate([
+    { $match: { "character.rol": "secundario", "character.apodo": "Arthur" } },
+    { $unwind: "$character" },
+    { $match: { "character.rol": "secundario", "character.apodo": "Arthur" } },
+    {
+      $project: {
+        _id: 0,
+        characterName: "$character.name",
+        rol: "$character.rol",
+        apodo: "$character.apodo" // Incluimos el apodo en la proyección
+      },
+    },
+  ]).toArray();
+
+  await this.conexion.close();
+  return res;
+}
+
+//quince ejercicio
+async getMoviesWithMainCharacterMiguel() {
+  let res = await this.collection.aggregate([
+    { $match: { "character.rol": "principal", "character.name": "Miguel" } },
+    { $unwind: "$character" },
+    { $match: { "character.rol": "principal", "character.name": "Miguel" } },
+    {
+      $project: {
+        _id: 0,
+        characterName: "$character.name",
+        rol: "$character.rol"
+      },
+    },
+  ]).toArray();
+
+  await this.conexion.close();
+  return res;
+}
 
   
 }
